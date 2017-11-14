@@ -134,6 +134,12 @@ export function activate(context: vscode.ExtensionContext): void {
             });
         }
     });
+    initAsyncCommand(context, 'appService.EditScmType', async (node: AppServiceNode) => {
+        if (node) {
+            const updatedScmType = await node.editScmType();
+            outputChannel.appendLine(`Deployment source for "${node.site.name}" has been updated to "${updatedScmType}".`);
+        }
+    });
     initAsyncCommand(context, 'deploymentSlots.CreateSlot', async (node: DeploymentSlotsNode) => {
         if (node) {
             const newSlot = await node.createNewDeploymentSlot();

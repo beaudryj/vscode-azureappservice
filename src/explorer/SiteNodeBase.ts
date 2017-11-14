@@ -184,6 +184,10 @@ export class SiteNodeBase extends NodeBase {
         }
     }
 
+    public async editScmType(): Promise<string> {
+        return await this._siteWrapper.editScmType(this.webSiteClient);
+    }
+
     protected get webSiteClient(): WebSiteManagementClient {
         return new WebSiteManagementClient(this.azureAccount.getCredentialByTenantId(this.subscription.tenantId), this.subscription.subscriptionId);
     }
