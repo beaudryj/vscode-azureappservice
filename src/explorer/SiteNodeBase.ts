@@ -88,28 +88,11 @@ export class SiteNodeBase extends NodeBase {
     }
 
     public async isHttpLogsEnabled(): Promise<boolean> {
-        const logsConfig = this._isSlot ? await this.webSiteClient.webApps.getDiagnosticLogsConfigurationSlot(this.site.resourceGroup, this._siteName, this._slotName) :
-            await this.webSiteClient.webApps.getDiagnosticLogsConfiguration(this.site.resourceGroup, this._siteName);
-        return logsConfig.httpLogs && logsConfig.httpLogs.fileSystem && logsConfig.httpLogs.fileSystem.enabled;
+        return await this._siteWrapper.isHttpLogsEnabled(this.webSiteClient);
     }
 
     public async enableHttpLogs(): Promise<void> {
-        const logsConfig: WebSiteModels.SiteLogsConfig = {
-            location: this.site.location,
-            httpLogs: {
-                fileSystem: {
-                    enabled: true,
-                    retentionInDays: 7,
-                    retentionInMb: 35
-                }
-            }
-        };
-
-        if (this._isSlot) {
-            await this.webSiteClient.webApps.updateDiagnosticLogsConfigSlot(this.site.resourceGroup, this._siteName, logsConfig, this._slotName);
-        } else {
-            await this.webSiteClient.webApps.updateDiagnosticLogsConfig(this.site.resourceGroup, this._siteName, logsConfig);
-        }
+        await this._siteWrapper.enableHttpLogs(this.webSiteClient);
     }
 
     public async connectToLogStream(extensionContext: ExtensionContext): Promise<void> {
